@@ -51,7 +51,7 @@ pub struct Entropy {
     /// The list of patterns the guess calculation was based on
     sequence: Vec<Match>,
     /// How long it took to calculate the answer.
-    calc_time: Duration,
+    calc_time: u64,
 }
 
 impl Entropy {
@@ -87,7 +87,7 @@ impl Entropy {
     }
 
     /// How long it took to calculate the answer.
-    pub fn calculation_time(&self) -> Duration {
+    pub fn calculation_time(&self) -> u64 {
         self.calc_time
     }
 }
@@ -116,15 +116,13 @@ fn duration_since_epoch() -> Result<Duration, ZxcvbnError> {
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-fn duration_since_epoch() -> Result<Duration, ZxcvbnError> {
-    std::time::SystemTime::now()
-        .duration_since(std::time::SystemTime::UNIX_EPOCH)
-        .map_err(|_| ZxcvbnError::DurationOutOfRange)
+fn duration_since_epoch() -> u64 {
+    0
 }
 
 #[cfg(target_arch = "riscv")]
 fn duration_since_epoch() -> u64 {
-    Ok(0)
+    0
 }
 
 /// Takes a password string and optionally a list of user-supplied inputs
@@ -135,7 +133,7 @@ pub fn zxcvbn(password: &str, user_inputs: &[&str]) -> Result<Entropy, ZxcvbnErr
         return Err(ZxcvbnError::BlankPassword);
     }
 
-    let start_time = duration_since_epoch()?;
+    let start_time = duration_since_epoch();
 
     // Only evaluate the first 100 characters of the input.
     // This prevents potential DoS attacks from sending extremely long input strings.
@@ -149,7 +147,7 @@ pub fn zxcvbn(password: &str, user_inputs: &[&str]) -> Result<Entropy, ZxcvbnErr
 
     let matches = matching::omnimatch(&password, &sanitized_inputs);
     let result = scoring::most_guessable_match_sequence(&password, &matches, false);
-    let calc_time = duration_since_epoch()? - start_time;
+    let calc_time = duration_since_epoch() - start_time;
     let (crack_times, score) = time_estimates::estimate_attack_times(result.guesses);
     let feedback = feedback::get_feedback(score, &result.sequence);
 
@@ -196,7 +194,7 @@ mod tests {
         assert_eq!(entropy.score, 4);
         assert!(!entropy.sequence.is_empty());
         assert!(entropy.feedback.is_none());
-        assert!(entropy.calc_time.as_nanos() > 0);
+        assert!(entropy.calc_time > 0);
     }
 
     #[cfg_attr(not(target_arch = "wasm32"), test)]
