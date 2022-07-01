@@ -107,15 +107,7 @@ quick_error! {
     }
 }
 
-#[cfg(target_arch = "wasm32")]
-fn duration_since_epoch() -> Result<Duration, ZxcvbnError> {
-    match js_sys::Date::new_0().get_time() as u64 {
-        u64::MIN | u64::MAX => Err(ZxcvbnError::DurationOutOfRange),
-        millis => Ok(Duration::from_millis(millis)),
-    }
-}
-
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(target_arch = "riscv"))]
 fn duration_since_epoch() -> u64 {
     0
 }

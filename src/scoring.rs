@@ -27,12 +27,12 @@ struct Optimal {
     g: Vec<HashMap<usize, u64>>,
 }
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(target_arch = "riscv")]
 fn current_year() -> i32 {
-    js_sys::Date::new_0().get_full_year().try_into().unwrap()
+    0
 }
 
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(target_arch = "riscv"))]
 fn current_year() -> i32 {
     0
 }
