@@ -34,8 +34,7 @@ fn current_year() -> i32 {
 
 #[cfg(not(target_arch = "wasm32"))]
 fn current_year() -> i32 {
-    use time::OffsetDateTime;
-    OffsetDateTime::now_utc().year()
+    0
 }
 
 lazy_static! {
