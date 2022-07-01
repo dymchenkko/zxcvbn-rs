@@ -122,6 +122,11 @@ fn duration_since_epoch() -> Result<Duration, ZxcvbnError> {
         .map_err(|_| ZxcvbnError::DurationOutOfRange)
 }
 
+#[cfg(target_arch = "riscv")]
+fn duration_since_epoch() -> u64 {
+    Ok(0)
+}
+
 /// Takes a password string and optionally a list of user-supplied inputs
 /// (e.g. username, email, first name) and calculates the strength of the password
 /// based on entropy, using a number of different factors.
