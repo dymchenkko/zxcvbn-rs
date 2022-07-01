@@ -27,14 +27,15 @@ struct Optimal {
     g: Vec<HashMap<usize, u64>>,
 }
 
-#[cfg(target_arch = "riscv")]
+#[cfg(target_arch = "wasm32")]
 fn current_year() -> i32 {
-    0
+    js_sys::Date::new_0().get_full_year().try_into().unwrap()
 }
 
-#[cfg(not(target_arch = "riscv"))]
+#[cfg(not(target_arch = "wasm32"))]
 fn current_year() -> i32 {
-    0
+    use time::OffsetDateTime;
+    OffsetDateTime::now_utc().year()
 }
 
 lazy_static! {

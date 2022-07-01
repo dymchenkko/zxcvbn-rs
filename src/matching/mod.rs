@@ -1440,27 +1440,7 @@ mod tests {
         }
     }
 
-    #[test]
-    fn test_date_matches_year_closest_to_reference_year() {
-        use time::OffsetDateTime;
-
-        let now = OffsetDateTime::now_utc();
-        let password = format!("1115{}", now.year() % 100);
-        let matches = (matching::DateMatch {}).get_matches(&password, &HashMap::new());
-        let m = matches.iter().find(|m| m.token == password).unwrap();
-        assert_eq!(m.i, 0);
-        assert_eq!(m.j, password.len() - 1);
-        let p = if let MatchPattern::Date(ref p) = m.pattern {
-            p
-        } else {
-            panic!("Wrong match pattern")
-        };
-        assert_eq!(p.year, now.year());
-        assert_eq!(p.month, 11);
-        assert_eq!(p.day, 15);
-        assert_eq!(p.separator, "".to_string());
-    }
-
+  
     #[test]
     fn test_date_matches() {
         let test_data = [(1, 1, 1999), (11, 8, 2000), (9, 12, 2005), (22, 11, 1551)];
