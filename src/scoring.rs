@@ -27,7 +27,7 @@ struct Optimal {
     g: Vec<HashMap<usize, u64>>,
 }
 
-#[cfg(target_arch = "wasm32")]
+/*#[cfg(target_arch = "wasm32")]
 fn current_year() -> i32 {
     js_sys::Date::new_0().get_full_year().try_into().unwrap()
 }
@@ -37,9 +37,9 @@ fn current_year() -> i32 {
     use time::OffsetDateTime;
     OffsetDateTime::now_utc().year()
 }
-
+*/
 lazy_static! {
-    pub(crate) static ref REFERENCE_YEAR: i32 = current_year();
+    pub(crate) static ref REFERENCE_YEAR: i32 = 2022;
 }
 const MIN_YEAR_SPACE: i32 = 20;
 const BRUTEFORCE_CARDINALITY: u64 = 10;
